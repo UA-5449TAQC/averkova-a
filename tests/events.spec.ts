@@ -5,9 +5,12 @@ import { assert } from 'node:console';
 import * as allure from 'allure-js-commons';
 
 test ('TC-01: Events List Rendering, Navigation & Data Integrity', async ({ homepagePage, eventsPage }) => {
+    allure.epic('Events Page');
+    allure.story('Events List Rendering, Navigation & Data Integrity');
+    allure.description('This test validates the rendering of the events list, navigation to the events page, and the integrity of event data displayed.');
 
     await homepagePage.navigateAndWait(); // 1. Navigate to the homepage
-    await homepagePage.getNavigationMenu().goToEvents(); // 2. Click on the "Events" link in the header
+    await homepagePage.getNavigationMenu().clickEventsLink(); // 2. Click on the "Events" link in the header
     await eventsPage.assertOnPage(); // 3. Validate page URL
     await expect.soft(eventsPage.mainHeader).toBeVisible(); // 4. Verify page title is visible
     await expect.soft(eventsPage.mainHeader).toHaveText('Events'); // 4. Verify page title text

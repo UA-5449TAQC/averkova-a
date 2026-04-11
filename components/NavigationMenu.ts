@@ -1,27 +1,37 @@
 import { Locator, Page} from '@playwright/test';
+import { BaseComponent} from './BaseComponent';
+import { step } from "allure-js-commons";
 
-export class NavigationMenu {
+export class NavigationMenu extends BaseComponent {
+    private logo: Locator;
+    private EcoNewsLink: Locator;
+    private EventsLink: Locator;
 
-    readonly headerMenu: Locator;
+    constructor(page: Page, root: Locator) {
+        super(page, root);
+        this.logo = this.root.getByAltText('Image green city logo');
+        this.EcoNewsLink = this.root.getByRole('link', { name: ' Eco news ' });
+        this.EventsLink = this.root.getByRole('link', { name: ' Events ' });
+    }
 
-  constructor(private page: Page) {
-    this.headerMenu = page.locator('div.header_navigation-menu');
-  }
 
-  private item(name: string): Locator {
-    return this.headerMenu.getByRole('link', { name }); //get item from the header menu bar by its name
-  }
+    async clickLogo(): Promise<void> {
+        await step('Click on logo in header', async () => {
+            await this.logo.click();
+        });
+    }
 
-  async goTo(name: string) {
-    await this.item(name).click();
-  }
+    async clickEcoNewsLink(): Promise<void> {
+        await step('Click on Eco News link in header', async () => {
+            await this.EcoNewsLink.click();
+        });
 
-  async goToNews() {
-    await this.goTo(' Eco news ');
-  }
+    }
 
-  async goToEvents() {
-    await this.goTo(' Events ');
-  }
+    async clickEventsLink(): Promise<void> {
+        await step ('Click on Events link in header', async () => {
+            await this.EventsLink.click();
+        });
+    }
 
 }

@@ -13,7 +13,7 @@ export class EventsPage extends BasePage {
     //constructor with inheriting page from BasePage + initializing locators
     constructor(page: Page) {
         super(page);
-        this.navigation = new NavigationMenu(page);
+        this.navigation = this.getNavigationMenu();
         this.mainHeader = page.locator('p.main-header');
         this.eventsItems = page.locator('mat-card.event-list-item');
      }

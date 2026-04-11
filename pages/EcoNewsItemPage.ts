@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
+import { NavigationMenu } from "../components/NavigationMenu";
 
 export class EcoNewsItemPage extends BasePage {
 
@@ -10,8 +11,8 @@ export class EcoNewsItemPage extends BasePage {
     readonly backToNewsButton: Locator;
 
 
-    constructor(page: Page) {
-        super(page);
+    constructor(page: Page, navigationMenu: NavigationMenu) {
+        super(page, navigationMenu);
         this.title = page.locator('.news-title-container');
         this.tags = page.locator('div.tags-item');
         this.author = page.locator('div.news-info-author');
