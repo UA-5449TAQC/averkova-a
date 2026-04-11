@@ -1,14 +1,11 @@
 import { Locator, Page } from '@playwright/test';
 
 export abstract class BaseComponent {
-  /** The page the component lives on — for keyboard/page-level actions */
-  protected readonly page: Page;
 
   /** The root locator that scopes ALL child locators in this component */
   protected readonly root: Locator;
 
-  constructor(page: Page, root: Locator) {
-    this.page = page;
+  constructor(root: Locator) {
     this.root = root;
   }
 

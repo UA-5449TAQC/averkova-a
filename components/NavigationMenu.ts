@@ -7,8 +7,8 @@ export class NavigationMenu extends BaseComponent {
     private EcoNewsLink: Locator;
     private EventsLink: Locator;
 
-    constructor(page: Page, root: Locator) {
-        super(page, root);
+    constructor(root: Locator) {
+        super(root);
         this.logo = this.root.getByAltText('Image green city logo');
         this.EcoNewsLink = this.root.getByRole('link', { name: ' Eco news ' });
         this.EventsLink = this.root.getByRole('link', { name: ' Events ' });

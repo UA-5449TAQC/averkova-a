@@ -7,7 +7,7 @@ export abstract class BasePage {
 
     constructor(page: Page) {
         this.page = page;
-        this.navigationMenu = new NavigationMenu(page, this.page.locator('header'));
+        this.navigationMenu = new NavigationMenu(this.page.locator('header'));
     }
 
     // ── Abstract contract ─────────────────────────────────────────────────────
