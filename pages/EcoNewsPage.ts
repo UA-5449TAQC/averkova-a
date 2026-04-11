@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
+import {step}  from 'allure-js-commons';
 
 export class EcoNewsPage extends BasePage {
 
@@ -32,11 +33,15 @@ export class EcoNewsPage extends BasePage {
     }
 
     async clickTag(tagName: string): Promise<void> {
-        await this.tagsList.filter({ hasText: tagName }).first().click();
+        await step(`Click on tag "${tagName}"`, async () => {
+            await this.tagsList.filter({ hasText: tagName }).first().click();
+        });
     }
 
     async clickNewsItemByIndex(index: number): Promise<void> {
-        await this.newsItems.nth(index).click();
+        await step(`Click on news item at index ${index}`, async () => {
+            await this.newsItems.nth(index).click();
+        });
     }
 
 

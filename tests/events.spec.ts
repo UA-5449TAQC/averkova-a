@@ -9,17 +9,23 @@ test ('TC-01: Events List Rendering, Navigation & Data Integrity', async ({ home
     allure.story('Events List Rendering, Navigation & Data Integrity');
     allure.description('This test validates the rendering of the events list, navigation to the events page, and the integrity of event data displayed.');
 
-    await homepagePage.navigateAndWait(); // 1. Navigate to the homepage
-    await homepagePage.getNavigationMenu().clickEventsLink(); // 2. Click on the "Events" link in the header
-    await eventsPage.assertOnPage(); // 3. Validate page URL
-    await expect.soft(eventsPage.mainHeader).toBeVisible(); // 4. Verify page title is visible
-    await expect.soft(eventsPage.mainHeader).toHaveText('Events'); // 4. Verify page title text
-    await eventsPage.expectAllEventsItemsVisible(); // 8. Verify event cards rendering
+    await allure.step('Navigate to the Events Page', async () => {
+        await homepagePage.navigateAndWait(); // 1. Navigate to the homepage
+        await homepagePage.getNavigationMenu().clickEventsLink(); // 2. Click on the "Events" link in the header
+        await eventsPage.assertOnPage(); // 3. Validate page URL
+    });
+    await allure.step('Verify Events Page content', async () => {
+        await expect.soft(eventsPage.mainHeader).toBeVisible(); // 4. Verify page title is visible
+        await expect.soft(eventsPage.mainHeader).toHaveText('Events'); // 4. Verify page title text
+        await eventsPage.expectAllEventsItemsVisible(); // 8. Verify event cards rendering
+    });
     //9. Verify fallback image
     //10. Verify title handling
-    await eventsPage.checkDateTimeFormat(); //11. Validate date/time format
-    await eventsPage.expectLocationVisible('Online'); 
-    await eventsPage.expectLocationVisible('office 113, st. Svetlitsky 35');//12. Validate location display
+    await allure.step('Verify Event Card content', async () => {
+        await eventsPage.checkDateTimeFormat(); //11. Validate date/time format
+        await eventsPage.expectLocationVisible('Online'); 
+        await eventsPage.expectLocationVisible('office 113, st. Svetlitsky 35');//12. Validate location display
+    });
     //13. Verify organizer info
     //14. Verify Join button
     //15. Scroll page

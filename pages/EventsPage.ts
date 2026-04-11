@@ -1,10 +1,9 @@
 import { Locator, Page, expect } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { NavigationMenu } from "../components/NavigationMenu";
+import {step}  from 'allure-js-commons';
 
 export class EventsPage extends BasePage {
 
-    readonly navigation: NavigationMenu;
     //page locators
     readonly mainHeader: Locator;
     readonly eventsItems: Locator;
@@ -13,7 +12,6 @@ export class EventsPage extends BasePage {
     //constructor with inheriting page from BasePage + initializing locators
     constructor(page: Page) {
         super(page);
-        this.navigation = this.getNavigationMenu();
         this.mainHeader = page.locator('p.main-header');
         this.eventsItems = page.locator('mat-card.event-list-item');
      }
@@ -44,6 +42,7 @@ export class EventsPage extends BasePage {
     }
 
     async checkDateTimeFormat() {
+        await step('Validate date/time format is "MMM DD, YYYY"', async () => {
         const count = await this.getEventItemsCount();
         await expect(count).toBeGreaterThan(0);
         const dateRegex = /^[A-Za-z]{3} \d{1,2}, \d{4}$/; // regex for "MMM DD, YYYY" format
@@ -51,6 +50,7 @@ export class EventsPage extends BasePage {
             const dateText = await this.getEventItemDate(i);
             await expect(dateText).toMatch(dateRegex);
         }
+    });
     }
 
     async expectLocationVisible(location: string) {

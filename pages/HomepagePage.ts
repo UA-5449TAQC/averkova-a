@@ -1,6 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { NavigationMenu } from "../components/NavigationMenu";
+import {step}  from 'allure-js-commons';
 
 export class HomepagePage extends BasePage {
     //page locators
