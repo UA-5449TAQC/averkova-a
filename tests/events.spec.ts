@@ -1,14 +1,13 @@
-import { test, expect } from '@playwright/test';
-import { EventsPage } from '../pages/EventsPage';
-import { HomepagePage } from '../pages/HomepagePage';
+import { NavigationMenu } from '../components/NavigationMenu';
+import { BasePage } from '../pages/BasePage';
+import { test, expect } from '../fixtures/page';
 import { assert } from 'node:console';
+import * as allure from 'allure-js-commons';
 
-test ('TC-01: Events List Rendering, Navigation & Data Integrity', async ({ page }) => {
-    const eventsPage = new EventsPage(page);
-    const homepagePage = new HomepagePage(page);
+test ('TC-01: Events List Rendering, Navigation & Data Integrity', async ({ homepagePage, eventsPage }) => {
 
-    await homepagePage.navigate(); // 1. Navigate to the homepage
-    await homepagePage.navigationMenu.goToEvents(); // 2. Click on the "Events" link in the header
+    await homepagePage.navigateAndWait(); // 1. Navigate to the homepage
+    await homepagePage.getNavigationMenu().goToEvents(); // 2. Click on the "Events" link in the header
     await eventsPage.assertOnPage(); // 3. Validate page URL
     await expect.soft(eventsPage.mainHeader).toBeVisible(); // 4. Verify page title is visible
     await expect.soft(eventsPage.mainHeader).toHaveText('Events'); // 4. Verify page title text

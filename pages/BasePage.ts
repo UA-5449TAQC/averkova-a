@@ -1,10 +1,13 @@
 import { Page, expect } from '@playwright/test';
+import { NavigationMenu } from '../components/NavigationMenu';
 
 export abstract class BasePage {
     protected page: Page;
+    protected navigationMenu: NavigationMenu;
 
-    constructor(page: Page) {
+    constructor(page: Page, navigationMenu: NavigationMenu) {
         this.page = page;
+        this.navigationMenu = navigationMenu;
     }
 
     // ── Abstract contract ─────────────────────────────────────────────────────
@@ -39,4 +42,7 @@ export abstract class BasePage {
         return this.page.url();
     }
 
+    getNavigationMenu(): NavigationMenu {
+        return this.navigationMenu;
+    }
 }

@@ -23,4 +23,5 @@ export class NavigationMenu {
   async goToEvents() {
     await this.goTo(' Events ');
   }
+
 }
