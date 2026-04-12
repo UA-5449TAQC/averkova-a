@@ -48,6 +48,7 @@ export class EventsPage extends BasePage {
     readonly filterByDateDropdown: Locator;
     readonly resetFiltersButton: Locator;
     readonly chips: Locator;
+    readonly filterResults: Locator;
 
 
     //constructor with inheriting page from BasePage + initializing locators
@@ -66,6 +67,7 @@ export class EventsPage extends BasePage {
         this.filterByDateDropdown = page.locator('mat-label:has-text("Date range")');
         this.resetFiltersButton = page.locator('button.reset');
         this.chips = page.locator('div.chips');
+        this.filterResults = page.locator('.active-filter-container p');
      }
 
      get url(): string {
@@ -126,6 +128,18 @@ export class EventsPage extends BasePage {
         });
     }
 
+    async checkAllEventCardsLocation(location: string) {
+        await step(`Verify all event cards have location: ${location}`, async () => {
+            const count = await this.getEventItemsCount();
+            await expect(count).toBeGreaterThan(0);
+            for (let i = 0; i < count; i++) {
+                const eventCard = this.getEventCardByIndex(i);
+                const cardLocation = await eventCard.getLocation();
+                await expect(cardLocation).toBe(location);
+            }
+        });
+    }
+
 
     async checkAllDateTimeFormat() {
         await step('Validate cards date/time format is "MMM DD, YYYY"', async () => {
@@ -151,6 +165,27 @@ export class EventsPage extends BasePage {
         });
 
     }
+
+    async expectNoCardsWithDate(date: string) {
+        await step(`Verify no event cards with date: ${date}`, async () => {
+            const cards = this.eventCards.filter({ hasText: date });
+            await expect(cards).toHaveCount(0);
+        });
+
+    }
+
+    async expectAllCardsTitleContains(title: string) {
+        await step(`Verify all event cards have title containing: ${title}`, async () => {
+            const count = await this.getEventItemsCount();
+            await expect(count).toBeGreaterThan(0);
+            for (let i = 0; i < count; i++) {
+                const eventCard = this.getEventCardByIndex(i);
+                const cardTitle = await eventCard.getTitle();
+                await expect(cardTitle).toContain(title);
+            }
+        });
+    }
+
 
     //── Switch View helpers ────────────────────────────────────────────────
 
@@ -240,6 +275,23 @@ export class EventsPage extends BasePage {
         });
     }
 
+    async removeFilterChip(filterText: string) {
+        await step(`Remove filter chip: ${filterText}`, async () => {
+            const chip = this.chips
+                .locator('.active-filter')
+                .filter({ hasText: filterText });
+
+            await chip.locator('.cross-container').click();
+        });
+    }
+
+    async getFilterResultsNumber(): Promise<string> {
+        const filterText = await this.filterResults.innerText();
+        const [count] = filterText.split(' ');
+        return Promise.resolve(count);
+    }
+
+
     //── Date Picker helpers ────────────────────────────────────────────────
 
         datePickerTrigger(): Locator {
@@ -253,4 +305,5 @@ export class EventsPage extends BasePage {
     datePicker(): DatePickerComponent {
         return new DatePickerComponent(this.page.locator('mat-datepicker-content'));
     }
+
 }
