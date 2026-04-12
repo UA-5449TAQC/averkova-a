@@ -47,6 +47,7 @@ export class EventsPage extends BasePage {
     readonly filterByTypeDropdown: Locator;
     readonly filterByDateDropdown: Locator;
     readonly resetFiltersButton: Locator;
+    readonly chips: Locator;
 
 
     //constructor with inheriting page from BasePage + initializing locators
@@ -64,6 +65,7 @@ export class EventsPage extends BasePage {
         this.filterByTypeDropdown = page.locator('mat-label:has-text("Type")');
         this.filterByDateDropdown = page.locator('mat-label:has-text("Date range")');
         this.resetFiltersButton = page.locator('button.reset');
+        this.chips = page.locator('div.chips');
      }
 
      get url(): string {
@@ -111,6 +113,19 @@ export class EventsPage extends BasePage {
             await expect(this.eventCards.nth(i)).toBeVisible();
         }
     }
+
+    async checkAllEventCardsStatus(status: string) {
+        await step(`Verify all event cards have status: ${status}`, async () => {
+            const count = await this.getEventItemsCount();
+            await expect(count).toBeGreaterThan(0);
+            for (let i = 0; i < count; i++) {
+                const eventCard = this.getEventCardByIndex(i);
+                const cardStatus = await eventCard.getStatus();
+                await expect(cardStatus).toBe(status);
+            }
+        });
+    }
+
 
     async checkAllDateTimeFormat() {
         await step('Validate cards date/time format is "MMM DD, YYYY"', async () => {
@@ -203,11 +218,27 @@ export class EventsPage extends BasePage {
     }
 
     async applyStatusFilter(status: EventStatusFilter) {
-        await step(`Apply status filter: ${status}`, async () => {
+        await step(`Apply event status filter: ${status}`, async () => {
             await this.page.getByRole('option', { name: status }).click();
         });
     }
 
+    async openTypeFilter() {
+        await this.page.getByRole('combobox', { name: /type/i }).click();
+    }
+
+    async applyTypeFilter(type: EventTypeFilter) {
+        await step(`Apply eventtype filter: ${type}`, async () => {
+            await this.page.getByRole('option', { name: type }).click();
+        });
+    }
+
+    async checkFilterChipVisible(filterText: string) {
+        await step(`Verify filter chip is visible: ${filterText}`, async () => {
+            const chip = this.chips.getByText(filterText, { exact: true });
+            await expect(chip).toBeVisible();
+        });
+    }
 
     //── Date Picker helpers ────────────────────────────────────────────────
 

@@ -10,6 +10,7 @@ export class EventCard extends BaseComponent {
     private organizer: Locator;
     private joinButton: Locator;
     private image: Locator;
+    private status: Locator;
 
     constructor(root: Locator) {
         super(root);
@@ -19,6 +20,7 @@ export class EventCard extends BaseComponent {
         this.organizer = this.root.locator('.event-organizer');
         this.joinButton = this.root.getByRole('button', { name: 'Join' });
         this.image = this.root.locator('img.event-image');
+        this.status = this.root.locator('.event-status');
     }
 
     getTitle(): Promise<string> {
@@ -45,8 +47,12 @@ export class EventCard extends BaseComponent {
         return this.image;
     }
 
+    getStatus(): Promise<string> {
+        return this.status.innerText();
+    }
+
     //── Visibility helpers ────────────────────────────────────────────────
-    
+
     async expectLocationVisible(location: string) {
         await expect(this.location).toHaveText(location);
         await expect(this.location).toBeVisible();
