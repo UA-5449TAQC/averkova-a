@@ -2,16 +2,51 @@ import { Locator, Page, expect } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import {step}  from 'allure-js-commons';
 import { EventCard } from "../components/EventCard";
+import { DatePickerComponent } from "../components/DatePicker";
+
+export const EVENT_TIME_FILTERS = {
+  UPCOMING: 'Upcoming',
+  PAST: 'Past',
+  ANY_TIME: ' Any Time ',
+} as const;
+
+export const EVENT_STATUS_FILTERS = {
+    OPEN: 'Open',
+    CLOSED: 'Closed',
+    ANY_STATUS: ' Any Status ',
+} as const;
+
+export const EVENT_TYPES_FILTERS = {
+    ECONOMIC: 'Economic',
+    ENVIRONMENTAL: 'Environmental',
+    SOCIAL: 'Social',
+    ALL_TYPES: ' All Types ',
+} as const;
+
+export type EventTimeFilter =
+  typeof EVENT_TIME_FILTERS[keyof typeof EVENT_TIME_FILTERS];
+
+export type EventStatusFilter =
+  typeof EVENT_STATUS_FILTERS[keyof typeof EVENT_STATUS_FILTERS];
+
+export type EventTypeFilter =
+  typeof EVENT_TYPES_FILTERS[keyof typeof EVENT_TYPES_FILTERS];
 
 export class EventsPage extends BasePage {
 
     //page locators
     readonly mainHeader: Locator;
     readonly eventCards: Locator;
-    readonly switchViewButton: Locator;
     readonly search: Locator;
     readonly gridViewButton: Locator;
     readonly listViewButton: Locator;
+    readonly filtersText: Locator;
+    readonly filterByTimeDropdown: Locator;
+    readonly filterByLocationDropdown: Locator;
+    readonly filterByStatusDropdown: Locator;
+    readonly filterByTypeDropdown: Locator;
+    readonly filterByDateDropdown: Locator;
+    readonly resetFiltersButton: Locator;
 
 
     //constructor with inheriting page from BasePage + initializing locators
@@ -19,18 +54,24 @@ export class EventsPage extends BasePage {
         super(page);
         this.mainHeader = page.locator('p.main-header');
         this.eventCards = page.locator('mat-card.event-list-item');
-        this.switchViewButton = page.locator('button.switch-view');
         this.search = page.locator('input[placeholder="Search"]');
-        this.gridViewButton = page.locator('button[aria-label="Switch to grid view"]');
-        this.listViewButton = page.locator('button[aria-label="Switch to list view"]');
+        this.gridViewButton = page.locator('button.gallery');
+        this.listViewButton = page.locator('button.list');
+        this.filtersText = page.locator('p.filter-by');
+        this.filterByTimeDropdown = page.locator('mat-label:has-text("Time")');
+        this.filterByLocationDropdown = page.locator('mat-label:has-text("Location")');
+        this.filterByStatusDropdown = page.locator('mat-label:has-text("Status")');
+        this.filterByTypeDropdown = page.locator('mat-label:has-text("Type")');
+        this.filterByDateDropdown = page.locator('mat-label:has-text("Date range")');
+        this.resetFiltersButton = page.locator('button.reset');
      }
 
-     //URL getter realized as abstract method from BasePage
      get url(): string {
         return '#/greenCity/events';
      }
 
-     
+    //── Event Cards helpers ────────────────────────────────────────────────
+
     getEventCardByLocation(location: string): EventCard {
     const card = this.page
         .getByTestId('event-card')
@@ -96,6 +137,8 @@ export class EventsPage extends BasePage {
 
     }
 
+    //── Switch View helpers ────────────────────────────────────────────────
+
     async switchViewTo(view: 'list' | 'grid') { 
         await step(`Switch to ${view} view`, async () => {
             const selectors = {
@@ -106,6 +149,7 @@ export class EventsPage extends BasePage {
         });
     }
 
+    //── Filters & Search helpers ────────────────────────────────────────────────
 
     async searchEvent(query: string) {
         await step(`Search for event with query: "${query}"`, async () => {
@@ -121,4 +165,61 @@ export class EventsPage extends BasePage {
     }
     );}
 
+    async expectAllFiltersVisible() {
+        await step('Verify all filter controls are visible', async () => {
+            await expect(this.filtersText).toBeVisible();
+            await expect(this.filterByDateDropdown).toBeVisible();
+            await expect(this.filterByLocationDropdown).toBeVisible();
+            await expect(this.filterByStatusDropdown).toBeVisible();
+            await expect(this.filterByTypeDropdown).toBeVisible();
+            await expect(this.filterByTimeDropdown).toBeVisible();
+            await expect(this.resetFiltersButton).toBeVisible();
+        });
+    }
+
+    async openEventTimeFilter() {
+        await this.page.getByRole('combobox', { name: /event time/i }).click();
+    }
+
+    async applyEventTimeFilter(eventTime: EventTimeFilter) {
+        await step(`Apply event time filter: ${eventTime}`, async () => {
+            await this.page.getByRole('option', { name: eventTime }).click();
+        });
+    }
+
+    async openLocationFilter() {
+        await this.page.getByRole('combobox', { name: /location/i }).click();
+    }
+
+
+    async applyLocationFilter(city: string) {
+        await step(`Apply location filter: ${city}`, async () => {
+            await this.page.getByRole('option', { name: city }).click();
+        });
+    }
+
+    async openStatusFilter() {
+        await this.page.getByRole('combobox', { name: /status/i }).click();
+    }
+
+    async applyStatusFilter(status: EventStatusFilter) {
+        await step(`Apply status filter: ${status}`, async () => {
+            await this.page.getByRole('option', { name: status }).click();
+        });
+    }
+
+
+    //── Date Picker helpers ────────────────────────────────────────────────
+
+        datePickerTrigger(): Locator {
+        return this.page.getByTestId('events-date-filter');
+    }
+
+    async openDatePicker() {
+        await this.datePickerTrigger().click();
+    }
+
+    datePicker(): DatePickerComponent {
+        return new DatePickerComponent(this.page.locator('mat-datepicker-content'));
+    }
 }

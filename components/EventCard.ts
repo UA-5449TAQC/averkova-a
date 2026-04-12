@@ -45,6 +45,8 @@ export class EventCard extends BaseComponent {
         return this.image;
     }
 
+    //── Visibility helpers ────────────────────────────────────────────────
+    
     async expectLocationVisible(location: string) {
         await expect(this.location).toHaveText(location);
         await expect(this.location).toBeVisible();
