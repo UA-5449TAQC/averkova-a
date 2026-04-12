@@ -2,31 +2,32 @@ import { BaseComponent } from "./BaseComponent";
 import { Locator, Page } from "@playwright/test";
 
 export class DatePickerComponent extends BaseComponent {
+
+    calendar: Locator;
+    nextButton: Locator;
+    previousButton: Locator;
+
     constructor(root: Locator) {
         super(root);
+        this.calendar = this.root.locator('mat-calendar');
+        this.nextButton = this.calendar.getByRole('button', { name: /next month/i });
+        this.previousButton = this.calendar.getByRole('button', { name: /previous month/i });
   }
 
-  private calendar(): Locator {
-    return this.root.locator('mat-calendar');
+    private dayCell(day: number): Locator {
+    return this.calendar.getByRole('gridcell', { name: String(day), exact: true });
   }
 
-  private nextButton(): Locator {
-    return this.calendar().locator('.mat-calendar-next-button');
+
+  async selectPreviousMonth() {
+    await this.previousButton.click();
   }
 
-  private previousButton(): Locator {
-    return this.calendar().locator('.mat-calendar-previous-button');
+  async selectNextMonth() {
+    await this.nextButton.click();
   }
 
-  private periodButton(): Locator {
-    return this.calendar().locator('.mat-calendar-period-button');
-  }
-
-  private dayCell(day: number): Locator {
-    return this.calendar().getByRole('gridcell', { name: String(day), exact: true });
-  }
-
-  async selectCurrentMonthDay(day: number) {
+  async selectDay(day: number) {
     await this.dayCell(day).click();
   }
 }
