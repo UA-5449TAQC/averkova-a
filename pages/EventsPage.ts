@@ -10,6 +10,8 @@ export class EventsPage extends BasePage {
     readonly eventCards: Locator;
     readonly switchViewButton: Locator;
     readonly search: Locator;
+    readonly gridViewButton: Locator;
+    readonly listViewButton: Locator;
 
 
     //constructor with inheriting page from BasePage + initializing locators
@@ -19,6 +21,8 @@ export class EventsPage extends BasePage {
         this.eventCards = page.locator('mat-card.event-list-item');
         this.switchViewButton = page.locator('button.switch-view');
         this.search = page.locator('input[placeholder="Search"]');
+        this.gridViewButton = page.locator('button[aria-label="Switch to grid view"]');
+        this.listViewButton = page.locator('button[aria-label="Switch to list view"]');
      }
 
      //URL getter realized as abstract method from BasePage
@@ -48,11 +52,11 @@ export class EventsPage extends BasePage {
         return new EventCard(cardLocator);
      }
 
-     async getEventItemsCount() {
+    getEventItemsCount() {
         return this.eventCards.count();
      }
 
-     async getEventItemDate(index: number) {
+    getEventItemDate(index: number) {
         return this.getEventCardByIndex(index).getDate();
      }
 
@@ -68,7 +72,7 @@ export class EventsPage extends BasePage {
     }
 
     async checkAllDateTimeFormat() {
-        await step('Validate date/time format is "MMM DD, YYYY"', async () => {
+        await step('Validate cards date/time format is "MMM DD, YYYY"', async () => {
         const count = await this.getEventItemsCount();
         await expect(count).toBeGreaterThan(0);
         const dateRegex = /^[A-Za-z]{3} \d{1,2}, \d{4}$/; // regex for "MMM DD, YYYY" format
@@ -92,18 +96,29 @@ export class EventsPage extends BasePage {
 
     }
 
-    async switchView() { 
-        await this.switchViewButton.click();
+    async switchViewTo(view: 'list' | 'grid') { 
+        await step(`Switch to ${view} view`, async () => {
+            const selectors = {
+                list: this.listViewButton,
+                grid: this.gridViewButton
+            };
+            await selectors[view].click();
+        });
     }
+
 
     async searchEvent(query: string) {
-        await this.search.fill(query);
-        await this.search.press('Enter');
+        await step(`Search for event with query: "${query}"`, async () => {
+            await this.search.fill(query);
+            await this.search.press('Enter');
     }
+    );}
 
     async clearSearch() {
-        await this.search.fill('');
-        await this.search.press('Enter');
+        await step('Clear search input', async () => {
+            await this.search.fill('');
+            await this.search.press('Enter');
     }
+    );}
 
 }

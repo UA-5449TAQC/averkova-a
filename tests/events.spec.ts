@@ -49,14 +49,16 @@ test ('TC-01: Events List Rendering, Navigation & Data Integrity', async ({ home
     });
     await allure.step('Verify page views (Grid/List)', async () => {
         await eventsPage.page.reload(); // Refresh page to reset state
-        await eventsPage.switchView(); //17. Switch view (Grid/List)
+        await eventsPage.switchViewTo('list'); //17. Switch view (Grid/List)
         await eventsPage.expectAllEventsItemsVisible();
 
     });
     await allure.step('Verify page search', async () => {
-        //18. Enter invalid search
-        //19. Clear search
-        //20. Refresh page
+        await eventsPage.searchEvent('!@#NoEvent123'); //18. Enter invalid search
+        const count = await eventsPage.getEventItemsCount();
+        expect(count).toBe(0); // Verify no results for invalid search
+        await eventsPage.clearSearch(); //19. Clear search
+        await eventsPage.page.reload(); //20. Refresh page
 
     });
 
