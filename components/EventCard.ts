@@ -14,11 +14,11 @@ export class EventCard extends BaseComponent {
 
     constructor(root: Locator) {
         super(root);
-        this.title = this.root.locator('.event-title');
-        this.date = this.root.locator('.event-date');
-        this.location = this.root.locator('.event-location');
-        this.organizer = this.root.locator('.event-organizer');
-        this.joinButton = this.root.getByRole('button', { name: 'Join' });
+        this.title = this.root.locator('.event-name');
+        this.date = this.root.locator('.date-container .date');
+        this.location = this.root.locator('.date-container p');
+        this.organizer = this.root.locator('.author p');
+        this.joinButton = this.root.getByRole('button', { name: 'Join event' });
         this.image = this.root.locator('img.event-image');
         this.status = this.root.locator('.event-status');
     }
@@ -58,7 +58,7 @@ export class EventCard extends BaseComponent {
         await expect(this.location).toBeVisible();
     }
 
-    async expectLongTitleVisible(title: string) {
+    async expectTitleVisible(title: string) {
         await expect(this.title).toHaveText(title);
         await expect(this.title).toBeVisible();
     }

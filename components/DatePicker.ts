@@ -13,13 +13,16 @@ export class DatePickerComponent extends BaseComponent {
         this.calendar = this.root.locator('mat-calendar');
         this.nextButton = this.calendar.getByRole('button', { name: /next month/i });
         this.previousButton = this.calendar.getByRole('button', { name: /previous month/i });
-        this.curentMonthYear = this.calendar.getByRole('button', { name: 'Choose month and year' });
+        this.curentMonthYear = this.calendar
+      .getByRole('button', { name: 'Choose month and year' })
+      .locator('span[aria-hidden="true"]');
   }
 
-    private dayCell(day: number): Locator {
-    return this.calendar.getByRole('gridcell', { name: String(day), exact: true });
+  private dayCell(day: number): Locator {
+    return this.calendar.getByRole('button', {
+      name: new RegExp(`\\b${day}\\b`)
+    });
   }
-
 
   async selectPreviousMonth() {
     await this.previousButton.click();
