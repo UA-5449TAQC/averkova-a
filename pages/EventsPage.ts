@@ -319,7 +319,7 @@ export class EventsPage extends BasePage {
     }
 
     async applyTypeFilter(type: EventTypeFilter) {
-        await step(`Apply eventtype filter: ${type}`, async () => {
+        await step(`Apply event type filter: ${type}`, async () => {
             await this.page.getByRole('option', { name: type }).click();
         });
     }
