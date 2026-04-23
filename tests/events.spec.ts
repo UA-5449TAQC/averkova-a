@@ -173,7 +173,7 @@ test ('TC-03: Event Details Page & Guest Access Restrictions', async ({ eventsPa
     allure.epic('Events Page');
     allure.story('Event Details');
     allure.issue('PROJ-1234', 'https://jira.company.com/browse/PROJ-1234');
-    allure.tms('TC-02', 'https://testlink.company.com/case/TC-02');
+    allure.tms('TC-03', 'https://testlink.company.com/case/TC-03');
 
     await eventsPage.navigateAndWait();
     await eventsPage.openStatusFilter();
