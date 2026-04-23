@@ -1,13 +1,17 @@
 import { Page, expect } from '@playwright/test';
 import { NavigationMenu } from '../components/NavigationMenu';
+import { LoginEventModal } from '../components/LoginEventModal';
 
 export abstract class BasePage {
     public page: Page;
     protected navigationMenu: NavigationMenu;
+    protected loginEventModal: LoginEventModal;
+
 
     constructor(page: Page) {
         this.page = page;
         this.navigationMenu = new NavigationMenu(this.page.locator('header'));
+        this.loginEventModal = new LoginEventModal(this.page.locator('app-auth-modal'));
     }
 
     // ── Abstract contract ─────────────────────────────────────────────────────
@@ -44,5 +48,9 @@ export abstract class BasePage {
 
     getNavigationMenu(): NavigationMenu {
         return this.navigationMenu;
+    }
+
+    getLoginEventModal(): LoginEventModal {
+        return this.loginEventModal;
     }
 }
