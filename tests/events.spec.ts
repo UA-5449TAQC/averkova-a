@@ -1,6 +1,4 @@
-import { EventTimeFilter, EventStatusFilter, EventTypeFilter } from '../pages/EventsPage';
 import { test, expect } from '../fixtures/page';
-import { assert } from 'node:console';
 import * as allure from 'allure-js-commons';
 
 test ('TC-01: Events List Rendering, Filtering & Data Integrity', async ({ homepagePage, eventsPage }) => {
