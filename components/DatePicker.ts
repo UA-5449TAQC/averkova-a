@@ -1,5 +1,5 @@
 import { BaseComponent } from "./BaseComponent";
-import { Locator, Page } from "@playwright/test";
+import { Locator } from "@playwright/test";
 
 export class DatePickerComponent extends BaseComponent {
 
