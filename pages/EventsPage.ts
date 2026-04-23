@@ -286,14 +286,14 @@ export class EventsPage extends BasePage {
 
     async addLocationToFilter(city: string) {
         await step(`Add location: ${city}`, async () => {
-        await expect(this.page.locator('.add-location-option')).toBeVisible();
-        await this.page.locator('.add-location-option').click();
-        await expect(this.page.locator('.city-input-row input')).toBeVisible();
-        await this.page.locator('.city-input-row input').fill(city);
-        await expect(this.page.locator('[id^="mat-autocomplete-"]').locator('mat-option').first()).toBeVisible();
-        await this.page.locator('[id^="mat-autocomplete-"]').locator('mat-option').first().click();
+            await expect(this.page.locator('.add-location-option')).toBeVisible();
+            await this.page.locator('.add-location-option').click();
+            await expect(this.page.locator('.city-input-row input')).toBeVisible();
+            await this.page.locator('.city-input-row input').fill(city);
+            await expect(this.page.locator('[id^="mat-autocomplete-"]').locator('mat-option').first()).toBeVisible();
+            await this.page.locator('[id^="mat-autocomplete-"]').locator('mat-option').first().click();
+            await this.page.getByRole('button', { name: ' Add selected cities ' }).click();
         });
-        await this.page.getByRole('button', { name: ' Add selected cities ' }).click();
     }
 
     async applyLocationFilter(city: string) {
